@@ -188,9 +188,11 @@ L2R values of => <-0.20 and >0.20 <= note these are example values and depends o
 
 #### L2R Script 
 
-```R
-#!/bin/env Rscript
 
+Script can be found here
+names => UKBB_calculate_average_L2R_arguments.R
+
+```
 ## GOAL
   # Generate averages for the log R ratios for each of the samples
   # Plot out these averages with a corresponding density+histogram plot 
@@ -204,141 +206,22 @@ L2R values of => <-0.20 and >0.20 <= note these are example values and depends o
 	# 4. Generating plots and saving out 
 
 ## TO USE 
-  # Rscript --vanilla UKBB_L2R_arguments.R SNCA_gene_region_ukb_l2r_chr4_v2 sampleID_list
+  # Rscript --vanilla UKBB_L2R_arguments.R $SNCA_gene_region_ukb_l2r_chr4_v2 $sampleID_list
     # Argument 1: UKBB region with just log R ratios (no header, no row names)
-    # Argument 2: Sample ID list as a .txt file (no header)
-
-##############################
-##### 0. GETTING STARTED #####
-##############################
-
-# Download the necessary packages 
-if (!require(tidyverse)) install.packages('tidyverse')
-if (!require(data.table)) install.packages('data.table')
-if (!require(dplyr)) install.packages('dplyr')
-if (!require(plyr)) install.packages('plyr')
-if (!require(ggplot2)) install.packages('ggplot2')
-if (!require(gridExtra)) install.packages('gridExtra')
-
-# Load the necessary packages 
-library(tidyverse)
-library(data.table)
-library(dplyr)
-library(plyr)
-library(ggplot2) 
-library(gridExtra)
-
-# Accepting arguments
-args = commandArgs(trailingOnly=TRUE)
-LR2_REGION = args[1]
-SAMPLE_LIST = args[2]
-
-# Read in the L2R file
-UKB_L2R <- fread(paste(args[1], ".txt", sep=""), header=FALSE, sep=" ")
-
-# Read in the sampleIDs 
-sampleID_file <- read.table(paste(args[2], ".txt", sep=""))
-
-# Make a list of the sample IDs 
-	# This is so we can add this as a header to the L2R file later
-sampleIDs_list <- unlist(as.character(sampleID_file$V1))
-
-# Add column names to the L2R file
-names(UKB_L2R) = c(sampleIDs_list)
-
-
-##############################
-##### 1. CALCULATE THE AVERAGES FOR EACH COLUMN #####
-##############################
-
-# Calculate the means of each column
-# Calculate even though there are NAs in the column (NA = variant doesn't exist but others do)
-
-# Using full dataset
-sample_l2r_averages <- colwise(mean)(UKB_L2R, na.rm = TRUE)
-
-##############################
-##### 2. TRANSPOSE THE AVERAGES AND SAMPLE IDS #####
-##############################
-
-# Transpose into a dataframe of averages 
-transposed_l2r_averages <- as.data.frame(t(sample_l2r_averages))
-
-# Get rid of R's annoying "row names" and keep the sample ID as a column instead 
-transposed_l2r_averages = rownames_to_column(transposed_l2r_averages, "SampleID")
-
-# Give meaningful column names 
-names(transposed_l2r_averages) = c("SampleID", "Average_L2R")
-
-# See the dataframe
-#head(transposed_l2r_averages)
-
-##############################
-##### 3. SORT IN DESCENDING ORDER AND SAVE #####
-##############################
-
-# Sort averages from high to low 
-sorted_l2r_averages <- transposed_l2r_averages %>% arrange(desc(Average_L2R))
-
-# Save out the sorted averages 
-write.table(sorted_l2r_averages, file = paste("sorted_", args[1], "_averageL2R.txt", sep=""), col.names = TRUE, row.names=FALSE, na="", quote = FALSE, sep="\t")
-
-##############################
-##### 4. GENERATING PLOTS AND SAVING OUT #####
-##############################
-
-# Formatting 
-require(scales)
-
-mult_format <- function() {
-     function(x) format(10*x,digits = 2) 
-}
-
-
-# Use a scatterplot
-
-l2r_averages <- ggplot(data = sorted_l2r_averages, aes(y = 1:nrow(sorted_l2r_averages), x=Average_L2R)) +
-  geom_point(alpha=0.5, size=0.5, color="navy") +
-  theme_light() +
-  theme(axis.ticks = element_blank()) +
-  ggtitle("Average log R Ratios") +
-  theme(plot.title = element_text(hjust=0.5)) +
-  scale_x_continuous(name = "Average L2R", limits = c(-0.6,0.4)) +
-  scale_y_continuous(labels=comma, name = "Samples \n(Total)", limits = c(0,500000)) 
-  
-#l2r_averages
-
-histogram_density <- ggplot(data = sorted_l2r_averages, aes(x=Average_L2R)) +
-  theme_light() +
-  theme(axis.ticks = element_blank()) +
-  geom_histogram(aes(y=..density..), alpha=.5, color="orange", fill="orange") +
-  geom_density(alpha=.5, fill="navy", color="blue") +
-  theme(axis.title.x = element_blank()) +
-  scale_y_continuous(labels = mult_format(), name = "Samples \n(Total %)", limits = c(0,10)) 
-
-#histogram_density
-
-# Save out the plots 
-ggsave(paste(args[1], "_L2R_AVERAGES_SCATTER_PLOT.jpg", sep=""), l2r_averages, width = 5, height = 3.5, units = "in")
-ggsave(paste(args[1], "_L2R_AVERAGES_HISTDEN_PLOT.jpg", sep=""), histogram_density, width = 5, height = 3.5, units = "in")
-
-# Use a scatterplot
-
-#l2r_averages
-
-# Plot both together 
-both_plots <- grid.arrange(histogram_density, l2r_averages, ncol=1, nrow=2, widths=c(1), heights=c(2.5, 5))
-
-# Save out 
-ggsave(paste(args[1], "_L2R_AVERAGES_BOTH_PLOT.jpg", sep=""), both_plots, width = 5, height = 3.5, units = "in")
+    # Argument 2: UKBB Sample ID list as a .txt file (no header)
+    
+## OUTPUT
+    # A text file with all average values per input region => *_averageL2R.txt
+    # A couple images 
 
 ```
 
 #### BAF Script
 
-```R
-#!/bin/env Rscript
+Script can be found here
+names => UKBB_calculate_BAF_arguments.R
 
+```
 ## GOAL
   # Generate counts of variants within a specified range for each sample 
   # In this case, counting variants >=0.65 and <=0.85 [OR] >=0.15 and <=0.35 for UKBB samples 
@@ -357,96 +240,9 @@ ggsave(paste(args[1], "_L2R_AVERAGES_BOTH_PLOT.jpg", sep=""), both_plots, width 
     # Argument 1: UKBB region with just B allele frequencies (no header, no row names)
     # Argument 2: Sample ID list as a .txt file (no header)
 
-##############################
-##### 0. GETTING STARTED #####
-##############################
-
-# Download the necessary packages 
-if (!require(tidyverse)) install.packages('tidyverse')
-if (!require(data.table)) install.packages('data.table')
-if (!require(dplyr)) install.packages('dplyr')
-if (!require(plyr)) install.packages('plyr')
-if (!require(plyr)) install.packages('purrr')
-
-# Load the necessary packages 
-library(tidyverse)
-library(data.table)
-library(dplyr)
-library(plyr)
-library(purrr)
-
-# Accepting arguments
-args = commandArgs(trailingOnly=TRUE)
-LR2_REGION = args[1]
-SAMPLE_LIST = args[2]
-
-# Read in BAF file 
-UKB_BAF <- fread(paste(args[1], ".txt", sep=""), header=FALSE, sep=" ")
-
-# Read in the sampleIDs 
-sampleID_file <- read.table(paste(args[2], ".txt", sep=""))
-
-# Make a list of the sample IDs 
-  # This is so we can add this as a header to the L2R file later
-sampleIDs_list <- unlist(as.character(sampleID_file$V1))
-
-# Add column names to the L2R file
-names(UKB_BAF) = c(sampleIDs_list)
-
-#########################################################################################################################
-##### 1. REPLACE VARIANTS <0.15 AND >0.85 WITH NA #######################################################################
-#########################################################################################################################
-
-# Replace all values <0.15 or >0.85 with NA 
-sorted_bafs <- UKB_BAF %>% mutate_all(funs(ifelse(.<0.15 | .>0.85, NA, .)))
-
-##############################
-##### 2. REPLACE VARIANTS BETWEEN 0.35 AND 0.65 WITH NA #####
-##############################
-
-# Then replace all values between 0.35 and 0.65 with NA 
-sorted_bafs2 <- sorted_bafs %>% mutate_all(funs(ifelse(.>0.35 & .<0.65, NA, .)))
-
-##############################
-##### 3. TRANSPOSE THE DATASET #####
-##############################
-
-# Transpose the dataset
-transposed <- as.data.frame(t(sorted_bafs2))
-
-# Get rid of R's annoying "row names" and keep the sample ID as the first column instead 
-transposed = rownames_to_column(transposed, "SampleID")
-
-##############################
-##### 4. RETURN COUNTS OF VARIANTS WITHIN A SPECIFIED RANGE FOR EACH SAMPLE #####
-##############################
-
-# Make a function that will return a vector of counts per row
-nonNAs <- function(x) {
-    as.vector(apply(x, 2, function(x) length(which(!is.na(x)))))
-}
-
-# Create a column of the counts 
-transposed$COUNTS <- nonNAs(sorted_bafs2)
-
-# Keep the 2 columns we are interested in
-counts_per_sample <- transposed %>% select("SampleID", "COUNTS")
-
-##############################
-##### 5. SORT IN DESCENDING ORDER #####
-##############################
-
-# Sort by descending order 
-sorted_counts_per_sample <- counts_per_sample %>% arrange(desc(COUNTS))
-
-##############################
-##### 6. SAVE OUT FILE WITH IDS AND COUNTS #####
-##############################
-
-# Save out the file keeping counts of samples with variants between >=0.65 and <=0.85 [OR] >=0.15 and <=0.35
-write.table(sorted_counts_per_sample, file = paste("sorted_", args[1], "_BAFcounts_bw015_035and065_085.txt", sep=""), col.names = TRUE, row.names=FALSE, na="", quote = FALSE, sep="\t")
-
-
+## OUTPUT
+    # A text file with the number of BAF values of interest per input region => *BAFcounts_bw015_035and065_085.txt
+ 
 ```
 
 #### Prioritization of sampleIDs
@@ -493,7 +289,6 @@ These sample IDs we be plotted in step 5 for closer inspection.
 
 #### Things to plot for SNCA region
 
-
 ```
 cut -f 1 HIGH_BAF_variants.txt | grep -v FID > input_standalone_BAF.txt
 cut -f 1 LOW_HIGH_L2R.txt | grep -v SampleID > input_standalone_L2R.txt
@@ -524,112 +319,32 @@ done
 
 #### How does standalone_CNV_BAF.R and standalone_CNV_L2R.R looks like under the hood
 
-##### standalone_CNV_BAF.R 
-```
-#!/bin/env Rscript
-args = commandArgs(trailingOnly=TRUE)
+##### standalone_CNV_BAF.R
 
-# run like dis:
-# Rscript --vanilla standalone_CNV.R $sampleID
+Script can be found here
+names => standalone_CNV_BAF.R 
 
-SAMPLENAME = args[1]
-print(args[1])
-print(SAMPLENAME)
+add in pdf example
 
-###### 
-# previously done:
-# R
-# require("data.table")
-# BAF <- fread("SNCA_gene_region1_ukb_baf_chr4_v2.txt",header=F)
-# FAM <- fread("ukb33601_cal_chr4_v2_s488264.fam",header=F)
-# BAF2 <- t(BAF)
-# BAF3 <- cbind(FAM,BAF2)
-# fwrite(BAF3, file="SNCA_gene_region_1_ukb_baf_chr4_v2_FINAL.txt", quote=FALSE,row.names=F,sep="\t")
+If you want to make it a bit fancier 
+Script can be found here
+names => standalone_CNV_BAF_SNCA_paper.R 
 
-require("data.table")
-BAF <- fread("SNCA_gene_region_1_ukb_baf_chr4_v2_FINAL.txt",header=F)
-newdata <- subset(BAF, V1 == SAMPLENAME)
-# V1 - V6 is crap
-newdata$V1 <- NULL
-newdata$V2 <- NULL
-newdata$V3 <- NULL
-newdata$V4 <- NULL
-newdata$V5 <- NULL
-newdata$V6 <- NULL
-BAF <- t(newdata)
-BIM <- fread("SNCA_gene_region1_ukb_bim_chr4_v2.txt",header=F)
-PLOT <- cbind(BAF,BIM)
-names(PLOT) <- c("BAF","CHR","RS","CRAP","BP","A1","A2")
+add in pdf example
 
-# BAF plots
-options(scipen=20)
-pdf(paste(SAMPLENAME,"_SNCA_REGIONAL_BAF_PLOT.pdf",sep=""),height=4, width=20)
-# !!! note depending on which gene you are interested in you need to change the xlim and xlab
-plot(PLOT$BP,PLOT$BAF,pch=20,ylab="B allele frequency",xlab="CHR 4 basepair",xlim=c(85645250,95759466))
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0.66, col="blue")
-abline(h=0.33, col="blue")
-plot(PLOT$BP,PLOT$BAF,pch=20,ylab="B allele frequency",xlab="CHR 4 basepair",xlim=c(90145250,91259466))
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0.66, col="blue")
-abline(h=0.33, col="blue")
-plot(PLOT$BP,PLOT$BAF,pch=20,ylab="B allele frequency",xlab="CHR 4 basepair",xlim=c(90645250,90759466))
-abline(h=0.66, col="blue")
-abline(h=0.33, col="blue")
-dev.off()
-
-```
 
 ##### standalone_CNV_L2R.R
-```
-#!/bin/env Rscript
-args = commandArgs(trailingOnly=TRUE)
 
-# run like dis:
-# Rscript --vanilla standalone_CNV_L2R.R $sampleID
+Script can be found here
+names => standalone_CNV_L2R.R 
 
-SAMPLENAME = args[1]
-print(args[1])
-print(SAMPLENAME)
+add in pdf example
 
-# previously done:
-# R
-# require("data.table")
-# L2R <- fread("SNCA_gene_region1_ukb_l2r_chr4_v2.txt",header=F)
-# FAM <- fread("ukb33601_cal_chr4_v2_s488264.fam",header=F)
-# L2R2 <- t(L2R)
-# L2R3 <- cbind(FAM,L2R2)
-# fwrite(L2R3, file="SNCA_gene_region_1_ukb_l2r_chr4_v2_FINAL.txt", quote=FALSE,row.names=F,sep="\t")
+If you want to make it a bit fancier 
+Script can be found here
+names => standalone_CNV_L2R_SNCA_paper.R 
 
-require("data.table")
-L2R <- fread("SNCA_gene_region_1_ukb_l2r_chr4_v2_FINAL.txt",header=F)
-newdata <- subset(L2R, V1 == SAMPLENAME)
-# V1 - V6 is crap
-newdata$V1 <- NULL
-newdata$V2 <- NULL
-newdata$V3 <- NULL
-newdata$V4 <- NULL
-newdata$V5 <- NULL
-newdata$V6 <- NULL
-L2R <- t(newdata)
-BIM <- fread("SNCA_gene_region1_ukb_bim_chr4_v2.txt",header=F)
-PLOT <- cbind(L2R,BIM)
-names(PLOT) <- c("L2R","CHR","RS","CRAP","BP","A1","A2")
-
-# L2R plots
-options(scipen=20)
-pdf(paste(SAMPLENAME,"_SNCA_REGIONAL_L2R_PLOT.pdf",sep=""),height=4, width=20)
-# !!! note depending on which gene you are interested in you need to change the xlim and xlab
-plot(PLOT$BP,PLOT$L2R,pch=20,ylab="L2R ratio",xlab="CHR 4 basepair",xlim=c(85645250,95759466))
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0, col="blue")
-plot(PLOT$BP,PLOT$L2R,pch=20,ylab="L2R ratio",xlab="CHR 4 basepair",xlim=c(90145250,91259466))
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0, col="blue")
-plot(PLOT$BP,PLOT$L2R,pch=20,ylab="L2R ratio",xlab="CHR 4 basepair",xlim=c(90645250,90759466))
-dev.off()
-
-```
+add in pdf example
 
 ### 6. Results summary
 
@@ -656,146 +371,23 @@ For L2R it is the average L2R value in that region
 
 #### Inspect wider region of "complex" hits
 
-```
-# mainly just plotting a wider region 20Mb +/- and the full chromosome
-#!/bin/env Rscript
-args = commandArgs(trailingOnly=TRUE)
-# run like dis:
-# Rscript --vanilla CNV_closer_inspection.R $sampleID
-# or via loop of course
-#cat SNCA_samples_moving_forward.txt | while read line
-#do 
-#	Rscript --vanilla CNV_closer_inspection.R $line
-#done
-#
-SAMPLENAME = args[1]
-print(args[1])
-print(SAMPLENAME)
-### prep in terminal
-#1) SNCA gene +/20 Mb(chr4:70645250-110759466, hg19)
-#sed -n 18206,27440p L2R/ukb_l2r_chr4_v2.txt > SNCA_gene_region20MB_ukb_l2r_chr4_v2.txt
-#sed -n 18206,27440p BAF/ukb_baf_chr4_v2.txt > SNCA_gene_region20MB_ukb_baf_chr4_v2.txt
-#sed -n 18206,27440p BIM/ukb_snp_chr4_v2.bim > SNCA_gene_region20MB_ukb_bim_chr4_v2.txt
-# sampleIDs extracted from order of the fam file... eg 7725 means line no. 7725 from fam file
-#cut -d " " -f 7725,9844,17764,20626,21866,47231,69987,71943,73636,79884,96701,107742,127331,132559,142739,153689,171403,192492,197048,203256,210002,210332,251635,256892,295413,296178,300109,313242,317386,324043,374718,378248,379993,399811,412462,435594 SNCA_gene_region20MB_ukb_baf_chr4_v2.txt > SNCA_gene_region20MB_ukb_baf_chr4_v2_SOI.txt
-#cut -d " " -f 7725,9844,17764,20626,21866,47231,69987,71943,73636,79884,96701,107742,127331,132559,142739,153689,171403,192492,197048,203256,210002,210332,251635,256892,295413,296178,300109,313242,317386,324043,374718,378248,379993,399811,412462,435594 SNCA_gene_region20MB_ukb_l2r_chr4_v2.txt > SNCA_gene_region20MB_ukb_l2r_chr4_v2_SOI.txt
-#2) full chromosome 4 region....
-#cut -d " " -f 7725,9844,17764,20626,21866,47231,69987,71943,73636,79884,96701,107742,127331,132559,142739,153689,171403,192492,197048,203256,210002,210332,251635,256892,295413,296178,300109,313242,317386,324043,374718,378248,379993,399811,412462,435594 BAF/ukb_baf_chr4_v2.txt > FULL_CHR4_ukb_baf_chr4_v2_SOI.txt
-#cut -d " " -f 7725,9844,17764,20626,21866,47231,69987,71943,73636,79884,96701,107742,127331,132559,142739,153689,171403,192492,197048,203256,210002,210332,251635,256892,295413,296178,300109,313242,317386,324043,374718,378248,379993,399811,412462,435594 L2R/ukb_l2r_chr4_v2.txt > FULL_CHR4_ukb_l2r_chr4_v2_SOI.txt
-#module load R
-#R
-require("data.table")
-# BAF 20Mb +/- SNCA
-BAF <- fread("SNCA_gene_region20MB_ukb_baf_chr4_v2_SOI.txt",header=F)
-BIM <- fread("SNCA_gene_region20MB_ukb_bim_chr4_v2.txt",header=F)
-BIM$V1 <- NULL
-BIM$V2 <- NULL
-BIM$V3 <- NULL
-BIM$V5 <- NULL
-BIM$V6 <- NULL
-PLOT_BAF_small <- cbind(BIM,BAF)
-colnames(PLOT_BAF_small)<- c("BP","3904498","4034452","4808417","4869340","4452658","5098063","4006112","4695452","4320561","3578582","3225421","5472141","5599676","5669333","2169315","1029339","4144040","4289989","4923054","5978754","4007051","4267683","2117275","6001494","5020751","3426342","3275017","5799189","1056333","3450917","2469446","5199908","2961590","5327170","4283868","4152894")
-# BAF full chr 4
-BAF <- fread("FULL_CHR4_ukb_baf_chr4_v2_SOI.txt",header=F)
-BIM <- fread("BIM/ukb_snp_chr4_v2.bim",header=F)
-BIM$V1 <- NULL
-BIM$V2 <- NULL
-BIM$V3 <- NULL
-BIM$V5 <- NULL
-BIM$V6 <- NULL
-PLOT_BAF_large <- cbind(BIM,BAF)
-colnames(PLOT_BAF_large)<- c("BP","3904498","4034452","4808417","4869340","4452658","5098063","4006112","4695452","4320561","3578582","3225421","5472141","5599676","5669333","2169315","1029339","4144040","4289989","4923054","5978754","4007051","4267683","2117275","6001494","5020751","3426342","3275017","5799189","1056333","3450917","2469446","5199908","2961590","5327170","4283868","4152894")
-# L2R 20Mb +/- SNCA
-L2R <- fread("SNCA_gene_region20MB_ukb_l2r_chr4_v2_SOI.txt",header=F)
-BIM <- fread("SNCA_gene_region20MB_ukb_bim_chr4_v2.txt",header=F)
-BIM$V1 <- NULL
-BIM$V2 <- NULL
-BIM$V3 <- NULL
-BIM$V5 <- NULL
-BIM$V6 <- NULL
-PLOT_L2R_small <- cbind(BIM,L2R)
-colnames(PLOT_L2R_small)<- c("BP","3904498","4034452","4808417","4869340","4452658","5098063","4006112","4695452","4320561","3578582","3225421","5472141","5599676","5669333","2169315","1029339","4144040","4289989","4923054","5978754","4007051","4267683","2117275","6001494","5020751","3426342","3275017","5799189","1056333","3450917","2469446","5199908","2961590","5327170","4283868","4152894")
-# L2R full chr 4
-L2R <- fread("FULL_CHR4_ukb_l2r_chr4_v2_SOI.txt",header=F)
-BIM <- fread("BIM/ukb_snp_chr4_v2.bim",header=F)
-BIM$V1 <- NULL
-BIM$V2 <- NULL
-BIM$V3 <- NULL
-BIM$V5 <- NULL
-BIM$V6 <- NULL
-PLOT_L2R_large <- cbind(BIM,L2R)
-colnames(PLOT_L2R_large)<- c("BP","3904498","4034452","4808417","4869340","4452658","5098063","4006112","4695452","4320561","3578582","3225421","5472141","5599676","5669333","2169315","1029339","4144040","4289989","4923054","5978754","4007051","4267683","2117275","6001494","5020751","3426342","3275017","5799189","1056333","3450917","2469446","5199908","2961590","5327170","4283868","4152894")
-# BAF and L2R plots
-options(scipen=20)
-pdf(paste(SAMPLENAME,"_LARGER_SNCA_PLOT.pdf",sep=""),height=4, width=20)
-plot(PLOT_BAF_large$BP,PLOT_BAF_large[[SAMPLENAME]],pch=20,ylab="B allele frequency",xlab="CHR 4 basepair",xlim=c(1,191154276),main="Full chromosome 4 BAF")
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0.66, col="blue")
-abline(h=0.33, col="blue")
-plot(PLOT_BAF_small$BP,PLOT_BAF_small[[SAMPLENAME]],pch=20,ylab="B allele frequency",xlab="CHR 4 basepair",xlim=c(70645250,110759466),main="SNCA region +/- 20Mb BAF")
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0.66, col="blue")
-abline(h=0.33, col="blue")
-plot(PLOT_L2R_large$BP,PLOT_L2R_large[[SAMPLENAME]],pch=20,ylab="L2R ratio",xlab="CHR 4 basepair",xlim=c(1,191154276),main="Full chromosome 4 L2R")
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0, col="blue")
-plot(PLOT_L2R_small$BP,PLOT_L2R_small[[SAMPLENAME]],pch=20,ylab="L2R ratio",xlab="CHR 4 basepair",xlim=c(70645250,110759466),main="SNCA region +/- 20Mb BAF")
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0, col="blue")
-dev.off()
-#plot(PLOT_BAF_large$BP,PLOT_BAF_large$"3904498",pch=20,ylab="B allele frequency",xlab="CHR 4 basepair",xlim=c(1,191154276),main="Full chromosome 4 BAF")
-#plot(PLOT_BAF_small$BP,PLOT_BAF_small$"3904498",pch=20,ylab="B allele frequency",xlab="CHR 4 basepair",xlim=c(70645250,110759466),main="SNCA region +/- 20Mb BAF")
-#plot(PLOT_L2R_large$BP,PLOT_L2R_large$"3904498",pch=20,ylab="L2R ratio",xlab="CHR 4 basepair",xlim=c(1,191154276),main="Full chromosome 4 L2R")
-#plot(PLOT_L2R_small$BP,PLOT_L2R_small$"3904498",pch=20,ylab="L2R ratio",xlab="CHR 4 basepair",xlim=c(70645250,110759466),main="SNCA region +/- 20Mb BAF")
-# DONE for chromosome 4
-### prep in terminal
-# starting with chromosome 5 as contrlol chromosome
-#2) full chromosome 5 region as control chromosome...
-#cut -d " " -f 7725,9844,17764,20626,21866,47231,69987,71943,73636,79884,96701,107742,127331,132559,142739,153689,171403,192492,197048,203256,210002,210332,251635,256892,295413,296178,300109,313242,317386,324043,374718,378248,379993,399811,412462,435594 BAF/ukb_baf_chr5_v2.txt > FULL_CHR5_ukb_baf_chr5_v2_SOI.txt
-#cut -d " " -f 7725,9844,17764,20626,21866,47231,69987,71943,73636,79884,96701,107742,127331,132559,142739,153689,171403,192492,197048,203256,210002,210332,251635,256892,295413,296178,300109,313242,317386,324043,374718,378248,379993,399811,412462,435594 L2R/ukb_l2r_chr5_v2.txt > FULL_CHR5_ukb_l2r_chr5_v2_SOI.txt
-# module load R
-# R
-# BAF full chr 5
-BAF <- fread("FULL_CHR5_ukb_baf_chr5_v2_SOI.txt",header=F)
-BIM <- fread("BIM/ukb_snp_chr5_v2.bim",header=F)
-BIM$V1 <- NULL
-BIM$V2 <- NULL
-BIM$V3 <- NULL
-BIM$V5 <- NULL
-BIM$V6 <- NULL
-PLOT_BAF_large <- cbind(BIM,BAF)
-colnames(PLOT_BAF_large)<- c("BP","3904498","4034452","4808417","4869340","4452658","5098063","4006112","4695452","4320561","3578582","3225421","5472141","5599676","5669333","2169315","1029339","4144040","4289989","4923054","5978754","4007051","4267683","2117275","6001494","5020751","3426342","3275017","5799189","1056333","3450917","2469446","5199908","2961590","5327170","4283868","4152894")
-# L2R full chr 5
-L2R <- fread("FULL_CHR5_ukb_l2r_chr5_v2_SOI.txt",header=F)
-BIM <- fread("BIM/ukb_snp_chr5_v2.bim",header=F)
-BIM$V1 <- NULL
-BIM$V2 <- NULL
-BIM$V3 <- NULL
-BIM$V5 <- NULL
-BIM$V6 <- NULL
-PLOT_L2R_large <- cbind(BIM,L2R)
-colnames(PLOT_L2R_large)<- c("BP","3904498","4034452","4808417","4869340","4452658","5098063","4006112","4695452","4320561","3578582","3225421","5472141","5599676","5669333","2169315","1029339","4144040","4289989","4923054","5978754","4007051","4267683","2117275","6001494","5020751","3426342","3275017","5799189","1056333","3450917","2469446","5199908","2961590","5327170","4283868","4152894")
-# BAF and L2R plots
-options(scipen=20)
-pdf(paste(SAMPLENAME,"_LARGER_CHR5_PLOT.pdf",sep=""),height=4, width=20)
-plot(PLOT_BAF_large$BP,PLOT_BAF_large[[SAMPLENAME]],pch=20,ylab="B allele frequency",xlab="CHR 5 basepair",xlim=c(1,180915260),main="Full chromosome 5 BAF")
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0.66, col="blue")
-abline(h=0.33, col="blue")
-plot(PLOT_L2R_large$BP,PLOT_L2R_large[[SAMPLENAME]],pch=20,ylab="L2R ratio",xlab="CHR 5 basepair",xlim=c(1,180915260),main="Full chromosome 5 L2R")
-rect(xleft=90645250,xright = 90759447,ybottom=par("usr")[3], ytop=par("usr")[4], density=10, col = "blue")
-abline(h=0, col="blue")
-dev.off()
-# DONE for chromosome 5
-# ALL DONE
-```
+Script can be found here
+names => CNV_closer_inspection.R 
+Basically very similar as standalone_CNV_BAF.R and standalone_CNV_L2R.R but now assesses full chr4 region and wider SNCA region +/- 20mb
+
+add in pdf example
+
+If you want to make it a bit fancier 
+Script can be found here
+names => standalone_CNV_BAF_SNCA_paper.R 
+
+add in pdf example
 
 #### Inspect all chromosomes of "complex" hits
 
-```
-TO ADD...
-```
-
+Script can be found here
+names => full_chromome_plot.R 
+Basically very similar as standalone_CNV_BAF.R and standalone_CNV_L2R.R but now assesses full all autosomes
 
 
 #### OK coolio so now whats next?
