@@ -219,7 +219,7 @@ name => UKBB_calculate_average_L2R_arguments.R
 
 #### BAF Script
 
-Script can be found [here] (https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/UKBB_calculate_BAF_arguments.R)
+Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/UKBB_calculate_BAF_arguments.R)
 
 names => UKBB_calculate_BAF_arguments.R
 
@@ -323,7 +323,7 @@ done
 
 ##### standalone_CNV_BAF.R
 
-Script can be found [here] (https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_BAF.R)
+Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_BAF.R)
 
 names => standalone_CNV_BAF.R 
 
@@ -331,7 +331,7 @@ add in pdf example
 
 If you want to make it a bit fancier 
 
-Script can be found [here] (https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_BAF_SNCA_paper.R)
+Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_BAF_SNCA_paper.R)
 
 names => standalone_CNV_BAF_SNCA_paper.R 
 
@@ -340,7 +340,7 @@ add in pdf example
 
 ##### standalone_CNV_L2R.R
 
-Script can be found [here] (https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_L2R.R)
+Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_L2R.R)
 
 names => standalone_CNV_L2R.R 
 
@@ -348,7 +348,7 @@ add in pdf example
 
 If you want to make it a bit fancier 
 
-Script can be found [here] (https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_L2R_SNCA_paper.R)
+Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_L2R_SNCA_paper.R)
 
 names => standalone_CNV_L2R_SNCA_paper.R 
 
@@ -379,7 +379,7 @@ For L2R it is the average L2R value in that region
 
 #### Inspect wider region of "complex" hits
 
-Script can be found [here] (https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/CNV_closer_inspection.R)
+Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/CNV_closer_inspection.R)
 
 names => CNV_closer_inspection.R 
 
@@ -389,7 +389,7 @@ add in pdf example
 
 #### Inspect all chromosomes of "complex" hits
 
-Script can be found [here] (https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/full_chromome_plot.R)
+Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/full_chromome_plot.R)
 
 names => full_chromome_plot.R 
 
