@@ -189,8 +189,9 @@ L2R values of => <-0.20 and >0.20 <= note these are example values and depends o
 #### L2R Script 
 
 
-Script can be found here
-names => UKBB_calculate_average_L2R_arguments.R
+Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/UKBB_calculate_average_L2R_arguments.R)
+
+name => UKBB_calculate_average_L2R_arguments.R
 
 ```
 ## GOAL
