@@ -321,13 +321,13 @@ done
 
 #### How does standalone_CNV_BAF.R and standalone_CNV_L2R.R looks like under the hood
 
-##### standalone_CNV_BAF.R
+#### standalone_CNV_BAF.R
 
 Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_BAF.R)
 
 names => standalone_CNV_BAF.R 
 
-add in pdf example
+# add in pdf example
 
 If you want to make it a bit fancier 
 
@@ -335,16 +335,16 @@ Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/
 
 names => standalone_CNV_BAF_SNCA_paper.R 
 
-add in pdf example
+# add in pdf example
 
 
-##### standalone_CNV_L2R.R
+#### standalone_CNV_L2R.R
 
 Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_L2R.R)
 
 names => standalone_CNV_L2R.R 
 
-add in pdf example
+# add in pdf example
 
 If you want to make it a bit fancier 
 
@@ -352,7 +352,7 @@ Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/
 
 names => standalone_CNV_L2R_SNCA_paper.R 
 
-add in pdf example
+# add in pdf example
 
 ### 6. Results summary
 
@@ -385,7 +385,7 @@ names => CNV_closer_inspection.R
 
 Basically very similar as standalone_CNV_BAF.R and standalone_CNV_L2R.R but now assesses full chr4 region and wider SNCA region +/- 20mb
 
-add in pdf example
+# add in pdf example
 
 #### Inspect all chromosomes of "complex" hits
 
@@ -394,6 +394,8 @@ Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/
 names => full_chromome_plot.R 
 
 Basically very similar as standalone_CNV_BAF.R and standalone_CNV_L2R.R but now assesses all autosomes
+
+# add in pdf example
 
 
 #### OK coolio so now whats next?
