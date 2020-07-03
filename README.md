@@ -5,7 +5,7 @@ July 2020
 
 Code contributors -> Cornelis, Mary, Hampton, Mike and Andy
 
-LNG ❤️    Open science  😍
+	LNG ❤️    Open science  😍
 
 Goals: 
 
