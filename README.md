@@ -490,7 +490,7 @@ ggsave(paste(SAMPLENAME,"_chr4_new_v2.pdf",sep=""), width = 20, height = 4)
 
 
 <p align="center">
-  <img width="600" height="600" src="exome_example.png">
+  <img src="exome_example.png">
 </p>
 
 
