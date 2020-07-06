@@ -346,13 +346,24 @@ names => standalone_CNV_L2R.R
 
 # add in pdf example
 
-If you want to make it a bit fancier 
+
+
+#### If you want to make it a bit fancier 
 
 Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_L2R_SNCA_paper.R)
 
 names => standalone_CNV_L2R_SNCA_paper.R 
 
-# add in pdf example
+<p align="center">
+  <img src="new_SNCA_large_BAF.png">
+</p>
+
+
+
+<p align="center">
+  <img src="new_SNCA_large_L2R.png">
+</p>
+
 
 ### 6. Results summary
 
@@ -395,7 +406,21 @@ names => full_chromome_plot.R
 
 Basically very similar as standalone_CNV_BAF.R and standalone_CNV_L2R.R but now assesses all autosomes
 
-[embed]https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/full_genome_BAF_example_page1.pdf[/embed]
+BAF just displaying chr1-4 because easier than all chr's
+
+
+<p align="center">
+  <img src="full_genome_BAF_example.png">
+</p>
+
+
+L2R just displaying chr1-4 because easier than all chr's
+
+
+<p align="center">
+  <img src="full_genome_L2R_example.png">
+</p>
+
 
 
 #### OK coolio so now whats next?
