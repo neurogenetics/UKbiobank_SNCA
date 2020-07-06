@@ -395,7 +395,7 @@ names => full_chromome_plot.R
 
 Basically very similar as standalone_CNV_BAF.R and standalone_CNV_L2R.R but now assesses all autosomes
 
-# add in pdf example
+[embed]https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/full_genome_BAF_example_page1.pdf[/embed]
 
 
 #### OK coolio so now whats next?
