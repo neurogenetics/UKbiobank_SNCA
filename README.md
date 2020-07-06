@@ -327,7 +327,13 @@ Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/
 
 names => standalone_CNV_BAF.R 
 
-# add in pdf example
+
+
+<p align="center">
+  <img src="old_SNCA_BAF.png">
+</p>
+
+
 
 If you want to make it a bit fancier 
 
@@ -335,7 +341,12 @@ Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/
 
 names => standalone_CNV_BAF_SNCA_paper.R 
 
-# add in pdf example
+
+
+<p align="center">
+  <img src="new_SNCA_large_BAF.png">
+</p>
+
 
 
 #### standalone_CNV_L2R.R
@@ -344,7 +355,12 @@ Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/
 
 names => standalone_CNV_L2R.R 
 
-# add in pdf example
+
+
+<p align="center">
+  <img src="old_SNCA_L2R.png">
+</p>
+
 
 
 
@@ -353,11 +369,6 @@ names => standalone_CNV_L2R.R
 Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/standalone_CNV_L2R_SNCA_paper.R)
 
 names => standalone_CNV_L2R_SNCA_paper.R 
-
-<p align="center">
-  <img src="new_SNCA_large_BAF.png">
-</p>
-
 
 
 <p align="center">
@@ -396,7 +407,27 @@ names => CNV_closer_inspection.R
 
 Basically very similar as standalone_CNV_BAF.R and standalone_CNV_L2R.R but now assesses full chr4 region and wider SNCA region +/- 20mb
 
-# add in pdf example
+
+<p align="center">
+  <img src="full_chr4_BAF.png">
+</p>
+
+
+<p align="center">
+  <img src="full_chr4_L2R.png">
+</p>
+
+
+<p align="center">
+  <img src="SNCA_20mb_BAF.png">
+</p>
+
+
+<p align="center">
+  <img src="SNCA_20mb_L2R.png">
+</p>
+
+
 
 #### Inspect all chromosomes of "complex" hits
 
