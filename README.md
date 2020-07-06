@@ -18,6 +18,8 @@ Goals:
 ### Brief summary:
 SNCA is a very important gene for Parkinson's disease. Missense mutations and copy number gains (duplications and triplications) have been shown to cause autosomal dominant Parkinson's disease. Here we screen the UK Biobank cohort for pathogenic missense mutations and copy number variants. We identified 6 SNCA duplications and 6 SNCA deletion. Besides we also identified ~26 potential mosaic copy number altering events that require follow-up to assess their potential role in disease.
 
+### Link to manuscript:
+Can be found here (not yet)
 
 ## Structure of Repo:
 1. [Downloading data](#1-Downloading-data)
@@ -331,7 +333,7 @@ names => standalone_CNV_BAF.R
 
 
 <p align="center">
-  <img src="old_SNCA_BAF.png">
+  <img src="Examples/old_SNCA_BAF.png">
 </p>
 
 
@@ -345,7 +347,7 @@ names => standalone_CNV_BAF_SNCA_paper.R
 
 
 <p align="center">
-  <img src="new_SNCA_large_BAF.png">
+  <img src="Examples/new_SNCA_large_BAF.png">
 </p>
 
 
@@ -359,7 +361,7 @@ names => standalone_CNV_L2R.R
 
 
 <p align="center">
-  <img src="old_SNCA_L2R.png">
+  <img src="Examples/old_SNCA_L2R.png">
 </p>
 
 
@@ -373,7 +375,7 @@ names => standalone_CNV_L2R_SNCA_paper.R
 
 
 <p align="center">
-  <img src="new_SNCA_large_L2R.png">
+  <img src="Examples/new_SNCA_large_L2R.png">
 </p>
 
 
@@ -410,22 +412,22 @@ Basically very similar as standalone_CNV_BAF.R and standalone_CNV_L2R.R but now 
 
 
 <p align="center">
-  <img src="full_chr4_BAF.png">
+  <img src="Examples/full_chr4_BAF.png">
 </p>
 
 
 <p align="center">
-  <img src="full_chr4_L2R.png">
+  <img src="Examples/full_chr4_L2R.png">
 </p>
 
 
 <p align="center">
-  <img src="SNCA_20mb_BAF.png">
+  <img src="Examples/SNCA_20mb_BAF.png">
 </p>
 
 
 <p align="center">
-  <img src="SNCA_20mb_L2R.png">
+  <img src="Examples/SNCA_20mb_L2R.png">
 </p>
 
 
@@ -442,7 +444,7 @@ BAF just displaying chr1-4 because easier than all chr's
 
 
 <p align="center">
-  <img src="full_genome_BAF_example.png">
+  <img src="Examples/full_genome_BAF_example.png">
 </p>
 
 
@@ -450,7 +452,7 @@ L2R just displaying chr1-4 because easier than all chr's
 
 
 <p align="center">
-  <img src="full_genome_L2R_example.png">
+  <img src="Examples/full_genome_L2R_example.png">
 </p>
 
 
@@ -547,7 +549,7 @@ ggsave(paste(SAMPLENAME,"_chr4_new_v2.pdf",sep=""), width = 20, height = 4)
 
 
 <p align="center">
-  <img src="exome_example.png">
+  <img src="Examples/exome_example.png">
 </p>
 
 
