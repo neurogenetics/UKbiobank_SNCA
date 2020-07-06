@@ -16,7 +16,8 @@ Goals:
 3) Check for pathnogenic missense mutations in SNCA...
 
 ### Brief summary:
-coming soon...
+SNCA is a very important gene for Parkinson's disease. Missense mutations and copy number gains (duplications and triplications) have been shown to cause autosomal dominant Parkinson's disease. Here we screen the UK Biobank cohort for pathogenic missense mutations and copy number variants. We identified 6 SNCA duplications and 6 SNCA deletion. Besides we also identified ~26 potential mosaic copy number altering events that require follow-up to assess their potential role in disease.
+
 
 ## Structure of Repo:
 1. [Downloading data](#1-Downloading-data)
