@@ -577,15 +577,15 @@ crossmap bed hg38ToHg19.over.chain.gz test.bed | cut -f 10,11,13,14,15,16,17 > $
 cd /path/to/UKBIOBANK/CNV_UKB/
 mkdir phenotypes
 # check in known disease group
-grep -f SNCA_samples_moving_forward.txt /path/to/UKBIOBANK/PHENOTYPE_DATA/disease_groups/* > phenotypes/disease_groups.txt
+grep -f FINAL_SNCA_list.txt /path/to/UKBIOBANK/PHENOTYPE_DATA/disease_groups/* > phenotypes/disease_groups.txt
 # check in ICD10 codes
-grep -f SNCA_samples_moving_forward.txt /path/to/UKBIOBANK/ICD10_UKBB/ICD10_codes/massive_ICD10_ALL_table.txt | sort -nk1 > phenotypes/ICD10.txt
+grep -f FINAL_SNCA_list.txt /path/to/UKBIOBANK/ICD10_UKBB/ICD10_codes/massive_ICD10_ALL_table.txt | sort -nk1 > phenotypes/ICD10.txt
 # check European?
-grep -f SNCA_samples_moving_forward.txt /path/to/UKBIOBANK/ICD10_UKBB/Covariates/covariates_phenome_to_use.txt > phenotypes/covariates.txt
+grep -f FINAL_SNCA_list.txt /path/to/UKBIOBANK/ICD10_UKBB/Covariates/covariates_phenome_to_use.txt > phenotypes/covariates.txt
 # add in ICD10 annotation
 module load R
 R
-ICD10 <- read.table("/path/to/UKBIOBANK/ICD10_UKBB/ICD10_codes/ICD10_coding.tsv",header=T)
+ICD10 <- read.table("phenotypes/ICD10_coding.tsv",header=T)
 pheno <- read.table("phenotypes/ICD10.txt",header=F)
 MM <- merge(pheno,ICD10,by.x="V2",by.y="coding")
 write.table(MM, file = "phenotypes/ICD10_annotated.txt",row.names=FALSE, quote = FALSE, sep="\t")
@@ -716,6 +716,46 @@ sampleID1 => 4:89729235:G:T => Pro117Thr
 sampleID2 => 4:89828156:A:C => His50Gln
 sampleID3 => 4:89828156:A:C => His50Gln
 
+```
+
+#### Annotation using ANNOVAR
+
+```
+# prep exome data (hg38)
+cd /path/to/UKBIOBANK/EXOME_DATA/PLINK_files/
+module load plink
+# subset SNCA
+plink --bed ukb_efe_chr1_v1.bed --bim ukb_fe_exm_chrall_v1.bim \
+--fam FAM_FILE.fam --chr 4 --from-bp 89724099 --to-bp 89838315 --make-bed --out SNCA_only
+# reformat for annovar
+cut -f 1,4 SNCA_only.bim > temp.txt
+cut -f 4,6 SNCA_only.bim > temp2.txt
+cut -f 5 SNCA_only.bim > temp3.txt
+paste temp.txt temp2.txt temp3.txt > to_annotate.txt
+# annotate
+module load annovar
+table_annovar.pl to_annotate.txt $ANNOVAR_DATA/hg38/ -buildver hg38 -out to_annotate_anno \
+-remove -protocol refGene,avsnp150,gnomad211_genome,clinvar_20200316 \
+-operation g,f,f,f -nastring . 
+
+# prep imputed data (hg19)
+cd /path/to/UKBIOBANK/IMPUTED_DATA/
+module load plink/2.3-alpha
+# subset SNCA
+plink2 --bgen ukb_imp_chr4_v3.bgen --make-bed --out SNCA --memory 230000  --threads 20 \
+--sample SAMPLE_FILE.sample --chr 4 --from-bp 90645250 --to-bp 90759466
+module load plink
+plink --bfile SNCA --make-bed --out SNCAv2
+# reformat for annovar
+cut -f 1,4 SNCAv2.bim > temp.txt
+cut -f 4,6 SNCAv2.bim > temp2.txt
+cut -f 5 SNCAv2.bim > temp3.txt
+paste temp.txt temp2.txt temp3.txt > to_annotate.txt
+# annotate
+module load annovar
+table_annovar.pl to_annotate.txt $ANNOVAR_DATA/hg19/ -buildver hg19 -out to_annotate_anno \
+-remove -protocol refGene,avsnp150,gnomad211_genome,clinvar_20200316 \
+-operation g,f,f,f -nastring . 
 ```
 
 ## Done
