@@ -552,6 +552,19 @@ ggsave(paste(SAMPLENAME,"_chr4_new_v2.pdf",sep=""), width = 20, height = 4)
   <img src="Examples/exome_example.png">
 </p>
 
+#### Optional if you want coordinates to be in hg19
+
+```
+# convert to hg19 from hg38 exome data if needed
+module load crossmap
+# download reference
+wget http://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/hg38ToHg19.over.chain.gz
+# subset columns
+cut -f 1,2 $UKBID_chr4.txt > temp
+cut -f 2-7 $UKBID_chr4.txt > temp2
+paste temp temp2 > test.bed
+crossmap bed hg38ToHg19.over.chain.gz test.bed | cut -f 10,11,13,14,15,16,17 > $UKBID_chr4.txt
+```
 
 
 ### 8. ICD10 code explorer of CNV carriers
