@@ -564,6 +564,8 @@ cut -f 1,2 $UKBID_chr4.txt > temp
 cut -f 2-7 $UKBID_chr4.txt > temp2
 paste temp temp2 > test.bed
 crossmap bed hg38ToHg19.over.chain.gz test.bed | cut -f 10,11,13,14,15,16,17 > $UKBID_chr4.txt
+# note dont forget to update the SNCA region in => plot_AD_chr4.R to hg19
+
 ```
 
 
