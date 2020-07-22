@@ -1,320 +1,369 @@
-# UKbiobank SNCA analysis
-SNCA mutation (missense and copy number variant) analysis in the UK biobank targeted gene approach
+# UKBioBank - SNCA Missense and CNV Analysis
 
-July 2020
+`LNG ❤️ Open Science 😍`
 
-Code contributors -> Cornelis, Mary, Hampton, Mike and Andy
+ - **Project:** UKBB CNV 
+ - **Author(s):** Cornelis B., Mary M., Hampton L., Mike N. and Andrew S.
+ - **Date Last Updated:** July 2020
+    - **Update Description:** Edits to README
 
-	LNG ❤️ Open science 😍
 
-Goals: 
+---
+### Quick Description: 
+*SNCA* mutation (missense and copy number variant) analysis in the UK biobank using a targeted gene approach
 
+### Motivation/Goals:
 1) Understanding and checking how the CNV data looks like in UKbiobank...
+2) Check for gene copy number variant in *SNCA* gene region...
+3) Check for pathnogenic missense mutations in *SNCA*...
 
-2) Check for gene copy number variant in SNCA gene region...
+### Background:
+*SNCA* is an important gene implicated in Parkinson's disease. Missense mutations and copy number gains (duplications and triplications) have been shown to cause autosomal dominant Parkinson's disease. Here, we screen the UK Biobank cohort for pathogenic missense mutations and copy number variants in *SNCA*. We identified 6 *SNCA* duplications and 6 *SNCA* deletions. Additionally, we also identified ~26 potential mosaic copy number altering events that require follow-up to assess their potential role in Parkinson's disease.
 
-3) Check for pathnogenic missense mutations in SNCA...
-
-### Brief summary:
-SNCA is a very important gene for Parkinson's disease. Missense mutations and copy number gains (duplications and triplications) have been shown to cause autosomal dominant Parkinson's disease. Here we screen the UK Biobank cohort for pathogenic missense mutations and copy number variants. We identified 6 SNCA duplications and 6 SNCA deletion. Besides we also identified ~26 potential mosaic copy number altering events that require follow-up to assess their potential role in disease.
-
-### Link to manuscript:
+### Link to Manuscript:
 Can be found here (not yet)
 
-## Structure of Repo:
-1. [Downloading data](#1-Downloading-data)
-2. [UKbiobank information data structure](#2-UKbiobank-information-data-structure)
-3. [Check files if the dimensions make sense](#3-Check-files-if-the-dimensions-make-sense)
-4. [Diving into regions of interest](#4-Diving-into-regions-of-interest)
+## Structure of README:
+### [1. Downloading Data](#1-Downloading-data)
+- This section goes through:
+    -  The approximate size of the B-allele frequency (BAF) and Log 2 Ratio (L2R) directories for *SNCA* 
+    -  How to download using Biowulf 
+### [2. UKbiobank Information and Data Structure](#2-UKbiobank-information-data-structure)
+- This section goes through: 
+    - What type of data you can download to do this analysis
+    - How the data is structured
+    - How to read the files
+    - File structure example
+### [3. Check Files](#3-Check-files-if-the-dimensions-make-sense)
+- This section goes through:
+    - Check if the dimensions make sense 
+### [4. Diving into Regions of Interest](#4-Diving-into-regions-of-interest)
 
-      A. [SNCA](#SNCA-region-subset)
-     
-      B. [Prioritization of sampleIDs](#Prioritization-of-sampleIDs)
+- #### [4A. SNCA](#SNCA-region-subset)
+- #### [4B. Prioritization of sampleIDs](#Prioritization-of-sampleIDs)
+### [5. Standalone CNV plotting scripts](#5-Standalone-CNV-plotting-scripts)
+### [6. Results Summary](#6-Results-summary)
+- #### [6A. SNCA Results](#SNCA-results)
+### [7. Using Exome Data as Potential Replication?](#7-Using-Exome-data-as-potential-replication)
+### [8. ICD10 Code Explorer of CNV Carriers](#8-ICD10-code-explorer-of-CNV-carriers)
+### [9. Relatedness of CNV Carriers](#9-Relatedness-of-CNV-carriers)
+### [10. Additional Things to Check](#10-Additional-things-to-check)
 
-5. [Standalone CNV plotting scripts](#5-Standalone-CNV-plotting-scripts)
-6. [Results summary](#6-Results-summary)
+---
+## 1. Downloading Data
 
-      A. [SNCA results](#SNCA-results)
-      
-7. [Using Exome data as potential replication?](#7-Using-Exome-data-as-potential-replication)
-8. [ICD10 code explorer of CNV carriers](#8-ICD10-code-explorer-of-CNV-carriers)
-9. [Relatedness of CNV carriers](#9-Relatedness-of-CNV-carriers)
-10. [Additional things to check](#10-Additional-things-to-check)
+These are not small files. For *SNCA*, the sizes of the folders are as follows: 
+- 1.4T	BAF/
+- 2.3T	L2R/
 
-
-### 1. Downloading data
-```
-For sure not small files...
-# size of folders...
-1.4T	BAF/
-2.3T	L2R/
-
+If using Biowulf, can be downloaded by doing the following: 
+```bash
 module load ukbb/0.1
-for CHROMOSOME_NUMBER in {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22};
-  do
-ukbgene l2r -c"$CHROMOSOME_NUMBER" -a/PATH/TO/KEY/KEYFILE.key 
-ukbgene baf -c"$CHROMOSOME_NUMBER" -a/PATH/TO/KEY/KEYFILE.key 
-done
+
+for CHROMOSOME_NUMBER in {1..22};
+    do
+        ukbgene l2r -c"$CHROMOSOME_NUMBER" -a/PATH/TO/KEY/KEYFILE.key
+        ukbgene baf -c"$CHROMOSOME_NUMBER" -a/PATH/TO/KEY/KEYFILE.key 
+    done
 ```
 
-### 2. UKbiobank information data structure
-```
-CNV files
-===
-These files contain the B-Allele-Frequency (baf) and Log2Ratio (log2r) 
-transformed intensitiy values for performing CNV calling. 
-There is a separate file for baf and log2r per chromosome. 
-These are plaintext files with space separated columns. 
-The rows corresond to markers (ordered as the calls BIM file) 
-and the columns correspond to samples (ordered as the calls FAM file)
-Missing values are represented by -1.
-
-------------------> samples => 'ukbiobank_file'.fam
-|
-|
-|
-|
-|
-|
-v
-markers => .bim files
-```
+## 2. UKbiobank Information and Data Structure
+The copy number variant (CNV) files from UKBB contain:
+- **B-alelle frequencies (BAF)** and **log2 ratios (L2R)** that have transformed intensity values to aid with CNV calling
+- Separate BAF and L2R files per chromosome 
+- Formatted as plain text files that are space-delimited 
+    - Rows correspond to different markers (following the structure of the `.bim` file)
+    - Columns correspond to the different samples (following the structure of the `.fam` file)
+- Missing values are represented by a -1 
 
 
-### 3. Check files if the dimensions make sense
-```
-------------------> samples => 'ukbiobank_file'.fam
 
+CNV File Structure Example: 
+| MARKER_ID| SAMPLE1  | SAMPLE2 | SAMPLE3|
+| -------- | -------- | --------|--------|
+| MARKER_1 | ##       | ##      |##      |
+| MARKER_2 | ##       | ##      |##      |
+| MARKER_3 | ##       | ##      |##      |
+| MARKER_4 | ##       | ##      |##      |
+| MARKER_5 | ##       | ##      |##      |
+> *Note:* There are no headers or row index names in the files
+
+
+## 3. Check Files
+Quick sanity check to see if the dimension of the files downloaded make sense 
+
+SampleIDs in the CNV files follow the `.fam` file structure, check that the number of columns in the CNV files match the number of rows in the `.fam` file.
+
+```bash
+# Check dimensions to check if all samples are present 
 head -1 ukb_l2r_chr14_v2.txt | tr ' ' '\n' | wc -l
 head -1 ukb_baf_chr1_v2.txt | tr ' ' '\n' | wc -l
-# 488377 samples corresponds to fam file
-
-##### check files if the dimensions make sense
-|
-|
-|
-|
-|
-|
-v
-markers => .bim files
-
-# number of markers is for each file different...
-Markers	CHR
-63487	1
-61966	2
-52300	3
-47443	4
-46314	5
-53695	6
-42722	7
-38591	8
-34310	9
-38308	10
-40824	11
-37302	12
-26806	13
-25509	14
-24467	15
-28960	16
-28835	17
-21962	18
-26186	19
-19959	20
-11342	21
-12968	22
-265	MT
-18857	X
-1357	XY
-691	Y
+    # 488377 samples corresponds to .fam file
 ```
 
-### 4. Diving into regions of interest
-Little bit if background... SNCA multiplications are associated Parkinson disease (PMID:14593171). Penetrance is often very high with these mutations... but large scale investigation of these genes hasnt been performed yet. 
+There are separate BAF and L2R files per chromosome, so each chromosome will have a different number of markers. Markers follow the structure of the `.bim` file, and make up the individual rows in the downloaded CNV files 
 
-#### SNCA region subset
+```bash
+# The number of markers is for each file will be different 
+	# Markers     CHR
+	# 63487	        1
+	# 61966	        2
+	# 52300	        3
+	# 47443	        4
+	# 46314	        5
+	# 53695	        6
+	# 42722	        7
+	# 38591	        8
+	# 34310	        9
+	# 38308	        10
+	# 40824	        11
+	# 37302	        12
+	# 26806	        13
+	# 25509	        14
+	# 24467	        15
+	# 28960	        16
+	# 28835	        17
+	# 21962	        18
+	# 26186	        19
+	# 19959	        20
+	# 11342	        21
+	# 12968	        22
+	# 265	        MT
+	# 18857	        X
+	# 1357	        XY
+	# 691	        Y
 ```
-# SNCA region 
-1) SNCA gene +/5 Mb(chr4:85645250-95759466, hg19)
-2) SNCA gene +/-0.5 Mb (chr4:90145250-91259466, hg19) 
-3) SNCA gene body (chr4:90645250-90759466, hg19)
 
-# check bim
+## 4. Diving into Regions of Interest
+#### Background 
+*SNCA* multiplications are associated Parkinson's disease ([PMID:14593171](https://pubmed.ncbi.nlm.nih.gov/14593171/)). Penetrance is often very high with these mutations... but large scale investigation of these genes hasn't been performed yet 
+
+### 4A. SNCA
+#### SNCA Region Subset (hg19) 
+1) **Region 1:** *SNCA* gene +/- 5 Mb (chr4:85645250-95759466, hg19)
+2) **Region 2:** *SNCA* gene +/- 0.5 Mb (chr4:90145250-91259466, hg19) 
+3) **Region 3:** *SNCA* gene body (chr4:90645250-90759466, hg19)
+
+```bash
+#######################
+# Check the .bim file #
+#######################
+
 cd /PATH/TO/UKBIOBANK/CNV_UKB/BIM
+
 head ukb_snp_chr4_v2.bim
+
 awk '$4 > 85645250' ukb_snp_chr4_v2.bim | awk '$4 < 95759466' | wc -l
-# 2373
+    # 2373
 awk '$4 > 90145250' ukb_snp_chr4_v2.bim | awk '$4 < 91259466' | wc -l
-# 391
+    # 391
 awk '$4 > 90645250' ukb_snp_chr4_v2.bim | awk '$4 < 90759466' | wc -l
-# 44
-# save variants
+    # 44
+
+############################################################
+# Save the variants out to different .txt files by region  #
+############################################################
+
 awk '$4 > 85645250' ukb_snp_chr4_v2.bim | awk '$4 < 95759466' > SNCA_region1_variants.txt
 awk '$4 > 90145250' ukb_snp_chr4_v2.bim | awk '$4 < 91259466' > SNCA_region2_variants.txt
 awk '$4 > 90645250' ukb_snp_chr4_v2.bim | awk '$4 < 90759466' > SNCA_region3_variants.txt
 scp *_variants.txt ../
 
-# subsetting BAF and L2R
+
+##########################
+# Subsetting BAF and L2R #
+##########################
+
 cd /PATH/TO/UKBIOBANK/CNV_UKB/
-# region 1 = 2373 variants
-# from rs62303078 = 21814 # position 1
-# to rs79456659 = 24186 # position 2
+# Region 1 = 2373 variants
+    # from rs62303078 = 21814 (position 1)
+    # to rs79456659 = 24186 (position 2)
 sed -n 21814,24186p L2R/ukb_l2r_chr4_v2.txt > SNCA_gene_region1_ukb_l2r_chr4_v2.txt
 sed -n 21814,24186p BAF/ukb_baf_chr4_v2.txt > SNCA_gene_region1_ukb_baf_chr4_v2.txt
-# region 2 = 391 variants
-# from rs73845905 = 22961 # position 1
-# to rs79190057 = 23351 # position 2
+
+# Region 2 = 391 variants
+    # from rs73845905 = 22961 (position 1)
+    # to rs79190057 = 23351 (position 2)
 sed -n 22961,23351p L2R/ukb_l2r_chr4_v2.txt > SNCA_gene_region2_ukb_l2r_chr4_v2.txt
 sed -n 22961,23351p BAF/ukb_baf_chr4_v2.txt > SNCA_gene_region2_ukb_baf_chr4_v2.txt
-# region 3 = 44 variants
-# from rs17180453 = 23164 # position 1
-# to rs1372519 = 23207 # position 2
+
+# Region 3 = 44 variants
+    # from rs17180453 = 23164 (position 1)
+    # to rs1372519 = 23207 (position 2)
 sed -n 23164,23207p L2R/ukb_l2r_chr4_v2.txt > SNCA_gene_region3_ukb_l2r_chr4_v2.txt
 sed -n 23164,23207p BAF/ukb_baf_chr4_v2.txt > SNCA_gene_region3_ukb_baf_chr4_v2.txt
 ```
 
-#### Extract BAF and L2R from large data-frames and prioritize based on these values for plotting
+### Extract BAF and L2R from Large Dataframes and Prioritize Based on these Values for Pdrlotting
 
-Brief explanation:
-BAF (= B allele frequency) values, when this value is 0 this mean genotype AA, when 0.5 this means genotype AB and when this is 1 this means genotype BB. If there is a duplication (which then means three genotypes) for example AAB then this value is 0.33 and for ABB 0.66 and for triplication (which then means four genotypes) for example AAAB then this value is 0.25 and for ABBB 0.75. 
-Note that deletions typically do not have any 0.5 values because all A genotypes will be 0 and all B genotypes will 1, however this should not be confused with homozygous streches of DNA were all AA genotypes will be 0 and all B genotypes will 1.
+#### Background for B-allele Frequencies
+BAF (= B allele frequency) values, explained:
 
-L2R (=log R ratio) values, when this value is 0 this mean genotype AA, AB or BB (= normal). When this value is lower than 0 this indicates a deletion so genotype A or B eg -0.45. When this value is higher than 0 this indicates a duplication so genotype for example genotype ABB, AAB with values of 0.3 and higher, similar for triplication with values of 0.75 and higher.
-
-See Table 2 of [here](https://www.illumina.com/documents/products/technotes/technote_cnv_algorithms.pdf) for more explanations 
-
-So below we are prioritizing:
-
-BAF values of => <0.85 and >0.65 + <0.35 and >0.15
-
-L2R values of => <-0.20 and >0.20 <= note these are example values and depends on your region of interest, typically general outlier detection like couple SD from mean should work.
-
-#### L2R Script 
+| BAF Value| Genotype| Type     |  
+| :--------:   | :--------: |:--------:     |
+| 0    | AA    | Normal; 2 genotypes      |
+| 0.75 | ABBB  | Triplication; 4 genotypes|
+| 0.66 | ABB   | Duplication; 3 genotypes |
+| 0.5  | AB    | Normal; 2 genotypes      |
+| 0.33 | AAB   | Duplication; 3 genotypes |
+| 0.25 | AAAB  | Triplication; 4 genotypes|
+| 1    | BB    | Normal; 2 genotypes      |
 
 
-Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/UKBB_calculate_average_L2R_arguments.R)
+***If there is a duplication,*** (which then means three genotypes) -- for example, AAB -- then this value is 0.33. For ABB, the value would be 0.66. 
 
-name => UKBB_calculate_average_L2R_arguments.R
+***If there is a triplication,*** (which then means four genotypes) -- for example, AAAB -- then this value is 0.25. For ABBB, the value would be 0.75. 
 
-```
-## GOAL
-  # Generate averages for the log R ratios for each of the samples
-  # Plot out these averages with a corresponding density+histogram plot 
-  # In this case, doing this for a specified SNCA range and UKBB samples 
-		
-## WORKFLOW
-	# 0. Getting Started
-	# 1. Calculate the averages for each column 
-	# 2. Transpose the dataframe 
-	# 3. Sort in descending order and save
-	# 4. Generating plots and saving out 
+Note that **deletions typically do not have any 0.5 values** because all A genotypes will be 0 and all B genotypes will 1, however this should not be confused with homozygous streches of DNA, where all AA genotypes will be 0 and all B genotypes will 1.
 
-## TO USE 
-  # Rscript --vanilla UKBB_L2R_arguments.R $SNCA_gene_region_ukb_l2r_chr4_v2 $sampleID_list
-    # Argument 1: UKBB region with just log R ratios (no header, no row names)
-    # Argument 2: UKBB Sample ID list as a .txt file (no header)
+
+#### Background for log2 R Rations
+L2R (=log R ratio) values, explained:
+
+
+| L2R Value | Genotypes | Type |
+ :--------:   | :--------: |:--------:     |
+| Less than 0    | A or B   | Deletion; 1 genotype   |
+| 0    | AA, AB, BB    | Normal; 2 genotypes   |
+| Greater than 0 | ABB, AAB  | Duplication; 3 genotypes|
+| Greater than or equal to 0.75 | ABBB, AAAB  | Triplication; 4 genotypes|
+
+
+When this value is:
+-  0, this mean genotype AA, AB or BB (= normal)
+-  Lower than 0, this indicates a deletion so genotype A or B (eg. -0.45)
+-  Higher than 0, this indicates a duplication so genotype for example genotype ABB, AAB with values of 0.3 and higher, similar for triplication with values of 0.75 and higher
+
+> See Table 2 of [here](https://www.illumina.com/documents/products/technotes/technote_cnv_algorithms.pdf) for more thorough explanations 
+
+**So below we are prioritizing:**
+- BAF values between <0.85 and >0.65 + <0.35 and >0.15
+- L2R values between <-0.20 and >0.20 
+ > ***Note:*** These are example values and depends on your region of interest, typically general outlier detection like couple SD from mean should work
+
+--- 
+### L2R Script 
+
+
+L2R script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/UKBB_calculate_average_L2R_arguments.R)
+
+#### Details  
+- *Name:* `UKBB_calculate_average_L2R_arguments.R`
+- Script Goals
+  - Generate averages for the log R ratios for each of the samples
+  - Plot out these averages with a corresponding density+histogram plot 
+  - In this case, doing this for a specified *SNCA* range and UKBB samples 		
+- Script Workflow
+	- 0. Getting Started
+	- 1. Calculate the averages for each column 
+	- 2. Transpose the dataframe 
+	- 3. Sort in descending order and save
+	- 4. Generating plots and saving out 
+
+- How to Use 
+  - `Rscript --vanilla UKBB_L2R_arguments.R $SNCA_gene_region_ukb_l2r_chr4_v2 $sampleID_list`
+    - Argument 1: UKBB region with just log R ratios (no header, no row names)
+    - Argument 2: UKBB Sample ID list as a .txt file (no header)
     
-## OUTPUT
-    # A text file with all average values per input region => *_averageL2R.txt
-    # A couple images 
+- Script Outputs
+    - A text file with all average values per input region @ `*_averageL2R.txt`
+    - A few figures
 
-```
+---
+### BAF Script 
+BAF script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/UKBB_calculate_BAF_arguments.R)
 
-#### BAF Script
+#### Details  
+- *Name:* `UKBB_calculate_BAF_arguments.R`
+- Script Goals
+	- Generate counts of variants within a specified range for each sample 
+  - In this case, counting variants >=0.65 and <=0.85 ***OR*** >=0.15 and <=0.35 for UKBB samples 
+- Script Workflow
+  - 0. Getting Started
+  - 1. Replace variants <0.15 and >0.85 with NA
+  - 2. Replace variants between 0.35 and 0.65 with NA 
+  - 3. Transpose the dataset
+  - 4. Return counts of variants within a specified range for each sample 
+  - 5. Sort in descending order
+  - 6. Save out file with IDs and counts
+- How to Use 
+  - `Rscript --vanilla UKBB_BAF_arguments.R SNCA_gene_region_ukb_baf_chr4_v2 sampleID_list`
+    - Argument 1: UKBB region with just B allele frequencies (no header, no row names)
+    - Argument 2: Sample ID list as a .txt file (no header)
+    
+- Script Outputs
+    - A text file with the number of BAF values of interest per input region @ `*BAFcounts_bw015_035and065_085.txt`
 
-Script can be found [here](https://github.com/neurogenetics/UKbiobank_SNCA/blob/master/UKBB_calculate_BAF_arguments.R)
+---
 
-names => UKBB_calculate_BAF_arguments.R
-
-```
-## GOAL
-  # Generate counts of variants within a specified range for each sample 
-  # In this case, counting variants >=0.65 and <=0.85 [OR] >=0.15 and <=0.35 for UKBB samples 
-
-## WORKFLOW
-  # 0. Getting Started
-  # 1. Replace variants <0.15 and >0.85 with NA
-  # 2. Replace variants between 0.35 and 0.65 with NA 
-  # 3. Transpose the dataset
-  # 4. Return counts of variants within a specified range for each sample 
-  # 5. Sort in descending order
-  # 6. Save out file with IDs and counts
-
-## TO USE 
-  # Rscript --vanilla UKBB_BAF_arguments.R SNCA_gene_region_ukb_baf_chr4_v2 sampleID_list
-    # Argument 1: UKBB region with just B allele frequencies (no header, no row names)
-    # Argument 2: Sample ID list as a .txt file (no header)
-
-## OUTPUT
-    # A text file with the number of BAF values of interest per input region => *BAFcounts_bw015_035and065_085.txt
- 
-```
-
-#### Prioritization of sampleIDs
+### 4B. Prioritization of sampleIDs
 
 Now we have 6 files per gene:
 
+```bash
+# L2R:
+    # sorted_SNCA_gene_region1_ukb_l2r_chr4_v2_averageL2R.txt
+    # sorted_SNCA_gene_region2_ukb_l2r_chr4_v2_averageL2R.txt
+    # sorted_SNCA_gene_region3_ukb_l2r_chr4_v2_averageL2R.txt
+
+# BAF:
+    # sorted_SNCA_gene_region1_ukb_baf_chr4_v2_BAFcounts_bw065_085and015_035.txt
+    # sorted_SNCA_gene_region2_ukb_baf_chr4_v2_BAFcounts_bw065_085and015_035.txt
+    # sorted_SNCA_gene_region3_ukb_baf_chr4_v2_BAFcounts_bw065_085and015_035.txt
 ```
-#L2R:
-sorted_SNCA_gene_region1_ukb_l2r_chr4_v2_averageL2R.txt
-sorted_SNCA_gene_region2_ukb_l2r_chr4_v2_averageL2R.txt
-sorted_SNCA_gene_region3_ukb_l2r_chr4_v2_averageL2R.txt
 
-#BAF:
-sorted_SNCA_gene_region1_ukb_baf_chr4_v2_BAFcounts_bw065_085and015_035.txt
-sorted_SNCA_gene_region2_ukb_baf_chr4_v2_BAFcounts_bw065_085and015_035.txt
-sorted_SNCA_gene_region3_ukb_baf_chr4_v2_BAFcounts_bw065_085and015_035.txt
+#### L2R
+Starting with L2R... We are looking for:
+- the very high values, and 
+- the very low values
 
-```
-
-##### L2R
-
-Lets start with L2R... We are looking for the very high and very low values.
-
-Given that we dont expect a very high number of deletions and duplications we selected of each of the three above described regions:
-
-- the 25 highest LR2 values 
-- the 25 lowest LR2 values 
+Given that we dont expect a very high number of deletions and duplications, we selected of each of the three above described regions:
+- the 25 highest L2R values 
+- the 25 lowest L2R values 
 
 
-##### BAF
+#### BAF
+With BAF... We are looking for:
+- the number of values between <0.85 and >0.65 
+- the number of values between <0.35 and >0.15
 
-Lets continue with BAF... We are looking for the number of values <0.85 and >0.65 + <0.35 and >0.15.
+Again, given that we dont expect a very high number of deletions and duplications, we selected:
 
-Again given that we dont expect a very high number of deletions and duplications we selected
+- Samples with >=25 variants in region 1 (*SNCA* gene +/- 5 Mb)
+- Samples with >=10 variants in region 2 (*SNCA* gene +/-0.5 Mb)
+- Samples with >=5 variants in region 3 (*SNCA* gene body)
 
-- samples with >=25 variants in region 1 (=SNCA gene +/5 Mb)
-- samples with >=10 variants in region 2 (SNCA gene +/-0.5 Mb)
-- samples with >=5 variants in region 3 (SNCA gene body)
-
-These sample IDs we be plotted in step 5 for closer inspection.
+These sample IDs we be plotted in step 5 for closer inspection
 
 
-### 5. Standalone CNV plotting scripts
+## 5. Standalone CNV Plotting Scripts
 
-#### Things to plot for SNCA region
+#### Things to Plot for *SNCA* region
+This was done using Biowulf 
 
-```
+```bash
 cut -f 1 HIGH_BAF_variants.txt | grep -v FID > input_standalone_BAF.txt
 cut -f 1 LOW_HIGH_L2R.txt | grep -v SampleID > input_standalone_L2R.txt
 
-# example option how to run:
+# Example options how to run:
 Rscript --vanilla standalone_CNV_BAF.R UKB_biobank_sample_ID
 Rscript --vanilla standalone_CNV_L2R.R UKB_biobank_sample_ID
 
-'Plotting BAF'
+## Plotting BAF
 #!/bin/sh
 # sbatch --cpus-per-task=10 --mem=40g --mail-type=END --time=24:00:00 input_standalone_BAF.sh
 module load R
+
 cat samples_of_interest.txt | while read line
 do 
 	Rscript --vanilla standalone_CNV_BAF.R $line
 done
    
-'Plotting L2R'
+## Plotting L2R
 #!/bin/sh
 # sbatch --cpus-per-task=10 --mem=40g --mail-type=END --time=24:00:00 input_standalone_L2R.sh
 module load R
+
 cat samples_of_interest.txt | while read line
 do 
 	Rscript --vanilla standalone_CNV_L2R.R $line
