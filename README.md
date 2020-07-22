@@ -60,9 +60,7 @@ This section goes through:
 ### [6. Results Summary](#6-Results-summary)
 - #### [6A. SNCA Results](#SNCA-results)
 This section goes through:
-   - Scripts
-   
-   
+   - Results from previous steps 
    
 ### [7. Using Exome Data as Potential Replication?](#7-Using-Exome-data-as-potential-replication)
 
