@@ -672,7 +672,6 @@ paste temp temp2 > test.bed
 crossmap bed hg38ToHg19.over.chain.gz test.bed | cut -f 10,11,13,14,15,16,17 > $UKBID_chr4.txt
 
 # Note: Don't forget to update the SNCA region in => plot_AD_chr4.R to hg19
-
 ```
 
 
@@ -716,6 +715,10 @@ write.table(MM, file = "phenotypes/ICD10_annotated.txt",row.names=FALSE, quote =
 ## 9. Relatedness of CNV Carriers
 #### Checking if any if the CNV Carriers are Related using PLINK
 
+PIHAT values, explained: 
+- ~0.5 means first degree
+- ~0.25 means second degree
+
 ```bash
 # Load the modules 
 module load plink #v1.9
@@ -745,7 +748,9 @@ plink --bfile MERGED_FILTER --indep-pairwise 1000 10 0.02 --autosome --out prune
 plink --bfile MERGED_FILTER --extract pruned_data.prune.in --make-bed --out MERGED_FILTER_PRUNE
 plink --bfile MERGED_FILTER_PRUNE --genome --min 0.05 --out MERGED_FILTER_PRUNE
 
-# investigate .genome file for high PIHAT values ~0.5 means first degree, ~0.25 means second degree, etc
+# investigate .genome file for high PIHAT values 
+    # ~0.5 means first degree
+    # ~0.25 means second degree, etc
 sort -gk 10 MERGED_FILTER_PRUNE.genome | head
 ```
 Most noteworthy samples and their PIHAT values:
@@ -907,4 +912,3 @@ table_annovar.pl to_annotate.txt $ANNOVAR_DATA/hg19/ -buildver hg19 -out to_anno
 ## Done
 
 ![myImage](https://media.giphy.com/media/XRB1uf2F9bGOA/giphy.gif)
-
