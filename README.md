@@ -240,7 +240,7 @@ sed -n 23164,23207p L2R/ukb_l2r_chr4_v2.txt > SNCA_gene_region3_ukb_l2r_chr4_v2.
 sed -n 23164,23207p BAF/ukb_baf_chr4_v2.txt > SNCA_gene_region3_ukb_baf_chr4_v2.txt
 ```
 
-### Extract BAF and L2R from Large Dataframes and Prioritize Based on these Values for Pdrlotting
+### Extract BAF and L2R from Large Dataframes and Prioritize Based on these Values for Plotting
 
 #### Background for B-allele Frequencies
 BAF (= B allele frequency) values, explained:
