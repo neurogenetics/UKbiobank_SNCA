@@ -22,6 +22,8 @@ print(SAMPLENAME)
 #2) full chromosome 4 region....
 #cut -d " " -f $LINE_NUMBERS_OF_INTEREST BAF/ukb_baf_chr4_v2.txt > FULL_CHR4_ukb_baf_chr4_v2_SOI.txt
 #cut -d " " -f $LINE_NUMBERS_OF_INTEREST L2R/ukb_l2r_chr4_v2.txt > FULL_CHR4_ukb_l2r_chr4_v2_SOI.txt
+# basically looks like something like this:
+# cut -d " " -f 32868,71249,96701,283140,350996,353013 BAF/ukb_baf_chr"$chnum"_v2.txt > FULL_CHR"$chnum"_ukb_baf_v2_SOI_EXTRA.txt
 #module load R
 #R
 require("data.table")
