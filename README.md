@@ -21,7 +21,11 @@
 *SNCA* is an important gene implicated in Parkinson's disease. Missense mutations and copy number gains (duplications and triplications) have been shown to cause autosomal dominant Parkinson's disease. Here, we screen the UK Biobank cohort for pathogenic missense mutations and copy number variants in *SNCA*. We identified 6 *SNCA* duplications and 6 *SNCA* deletions. Additionally, we also identified ~26 potential mosaic copy number altering events that require follow-up to assess their potential role in Parkinson's disease.
 
 ### Link to Manuscript:
-Can be found here (not yet)
+https://www.sciencedirect.com/science/article/pii/S0969996120304575
+
+or 
+
+https://www.medrxiv.org/content/10.1101/2020.08.11.20172866v1
 
 ## Structure of README:
 ### [1. Downloading Data](#1-Downloading-data)
