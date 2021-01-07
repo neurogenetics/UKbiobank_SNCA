@@ -852,7 +852,7 @@ sort -nk 8 freq_SNCA.raw | tail -14 | head -13 | cut -d " " -f 1 >> SNCA_carrier
 sort -nk 9 freq_SNCA.raw | tail -2 | head -1 | cut -d " " -f 1 >> SNCA_carriers.txt
 sort -nk 10 freq_SNCA.raw | tail -29 | head -28 | cut -d " " -f 1 >> SNCA_carriers.txt
 
-wc -l SNCA_carriers.txt # 49 so makese sense => 7+23+1+28
+wc -l SNCA_carriers.txt # 49 so makese sense => 7+13+1+28
 
 /path/to/UKBIOBANK/EXOME_DATA/PLINK_files/SNCA_carriers.txt
 
